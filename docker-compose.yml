@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: revive_user
+      MYSQL_DATABASE: revive_db
+      MYSQL_USER: revive_admin
+      MYSQL_PASSWORD: revive_admin_login
+
+  ad-server:
+    build:
+      context: .
+      dockerfile: ./ad-server/Dockerfile
+    ports:
+      - "8081:80"
+    depends_on:
+       - db
+    volumes:
+      - /var/www/html/plugins
+      - /var/www/html/var
+      - /var/www/html/www/images
+    restart: always
+    
+volumes:
+    db_data: {}
